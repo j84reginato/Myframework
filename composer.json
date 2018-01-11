@@ -13,10 +13,8 @@
     },
     "autoload": {
         "psr-4": {
-            "core\\": "core/",
-            "database\\": "database/",
-            "controllers\\": "mvc/controllers/",
-            "models\\": "mvc/models/"
+            "Myframework\\": "library/myframework/",
+            "Application\\": "application/modules/"            
         }
     }
 }
