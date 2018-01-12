@@ -45,7 +45,7 @@ abstract class Mapper extends Gateway
         $params[] = array(':id', $id, 'int');
         $result = $this->query($sql, $params);
         if ($result) {
-            $object = $result->fetchObject($this->getEntityClass());
+            $object = $this->fetchObject($this->getEntityClass());
         }
         return $object;
     }

@@ -67,7 +67,7 @@ abstract class Gateway
         try {
             $conn = Transaction::get();
             if ($conn) {
-                $settedParams = $this->setupParams($params);
+                $settedParams = $this->setParamsDataType($params);
                 $cleanedParams = $this->cleanParams($query, $settedParams);
                 $this->lastQuery = $conn->prepare($query);
                 foreach ($cleanedParams as $val) {
@@ -117,14 +117,14 @@ abstract class Gateway
     /** -----------------------------------------------------------------------
      * fetchObject
      * ------------------------------------------------------------------------
-     * Procura e retorna (um a um) os resultados da consulta num objeto stdClass
+     * Procura e retorna (um a um) os resultados da consulta num objeto
      *
      * @param string $query = A string (sql) de consulta
      * @return object $data = Dados da consulta no formato:
      *                        $objeto->atributo
      *                        $data['nome do campo no bd'] -> 'valor do campo no bd'
      */
-    public function fetchObject($query = null)
+    public function fetchObject($class = 'stdClass', $query = null)
     {
         try {
             if ($query == null) {
@@ -133,7 +133,7 @@ abstract class Gateway
                 }
                 $query = $this->fetchQuery;
             }
-            $data = $query->fetchObject($this->getEntityClass());
+            $data = $query->fetchObject($class);
             if ($data == false) {
                 $this->fetchQuery = null;
             }
@@ -156,9 +156,9 @@ abstract class Gateway
     {
         try {
             if ($query == null) {
-                $query = $this->last_query;
+                $query = $this->lastQuery;
             }
-            return $query->fetchAll($this->fetch_methods[$method]);
+            return $query->fetchAll($this->fetchMethods[$method]);
         } catch (\PDOException $e) {
             Connection::errorHandler($e->getMessage() . ' ' . $query);
         }
@@ -177,7 +177,7 @@ abstract class Gateway
     {
         try {
             if ($query == null) {
-                $query = $this->last_query;
+                $query = $this->lastQuery;
             }
             return $query->fetchAll(\PDO::FETCH_CLASS, $class);
         } catch (\PDOException $e) {
@@ -199,9 +199,9 @@ abstract class Gateway
     {
         try {
             if ($query == null) {
-                $query = $this->last_query;
+                $query = $this->lastQuery;
             }
-            $data = $query->fetch($this->fetch_methods[$method]);
+            $data = $query->fetch($this->fetchMethods[$method]);
             if (empty($column) || $column == null) {
                 return $data;
             } else {
@@ -217,18 +217,18 @@ abstract class Gateway
      *
      * Procura e retorna (um a um) o valor de uma coluna específica do banco de dados
      *
+     * @param type $class
      * @param string $column - A coluna do bd que se deseja retornar o valor
      * @param string $query - A string de consulta
-     * @param string $method - O método de busca
      * @return object - Retorna os dados da consulta
      */
-    public function resultObject($column = null, $query = null)
+    public function resultObject($class, $column = null, $query = null)
     {
         try {
             if ($query == null) {
-                $query = $this->last_query;
+                $query = $this->lastQuery;
             }
-            $data = $query->fetchObject();
+            $data = $query->fetchObject($class);
             if (empty($column) || $column == null) {
                 return $data;
             } else {
@@ -251,7 +251,7 @@ abstract class Gateway
     {
         try {
             if ($query == null) {
-                $query = $this->last_query;
+                $query = $this->lastQuery;
             }
             return $query->rowCount();
         } catch (\PDOException $e) {
@@ -268,7 +268,7 @@ abstract class Gateway
     public function lastInsertId()
     {
         try {
-            return $this->conn->lastInsertId();
+            return $this->lastQuery->lastInsertId();
         } catch (\PDOException $e) {
             Connection::errorHandler($e->getMessage());
         }
@@ -276,18 +276,20 @@ abstract class Gateway
 
     // ------------------------------------------------------------------------
     /**
-     * Define valores PDO (PDO::PARAM_INT, PDO::PARAM_STR) para os parâmetros.
+     * Define valores "PDO data type" para os parâmetros.
      *
-     * 1) Força a conversão para float se o parâmetro é do tipo float.
+     * 1) Força a conversão do valor do parâmetro para float se o tipo de dado
+     *    do parâmetro em questão for do tipo float.
      *
-     * 2) 'bool' => \PDO::PARAM_BOOL, não funciona, é um erro php.
-     *    Para corrigir esse erro, define 1 se o tipo for bool e se o valor for
-     *    1 ou mais.
+     * 2) O PDO data type PARAM_BOOL, não funciona, trata-se de um erro php.
+     *    Para corrigir esse erro, se o tipo do dado do parâmetro for bool e o
+     *    valor do parâmetro for maior ou igual a 1, utiliza-se o PDO data type
+     *    PARAM_INT e define o valor do parâmetro para 1.
      *
      * @param array $params Parâmetros da consulta
      * @return array Os parâmetros configurados com os valores PDO
      */
-    final protected function setupParams($params)
+    final protected function setParamsDataType($params)
     {
         $pdoConstants = array(
             'int'   => \PDO::PARAM_INT,
@@ -318,14 +320,14 @@ abstract class Gateway
      */
     final protected function cleanParams($query, $params)
     {
-        preg_match_all("(:[a-zA-Z0-9_]+)", $query, $set_params = array());
-        foreach ($set_params[0] as $val) {
+        preg_match_all("(:[a-zA-Z0-9_]+)", $query, $setParams = array());
+        foreach ($setParams[0] as $val) {
             $key = $this->findKey($params, $val);
             if (isset($key)) {
-                $new_params[] = $params[$key];
+                $newParams[] = $params[$key];
             }
         }
-        return $new_params;
+        return $newParams;
     }
 
     /**

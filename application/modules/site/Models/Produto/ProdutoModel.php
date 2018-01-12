@@ -7,6 +7,6 @@ use Myframework\Database\ConnectionConfig;
 
 class ProdutoModel extends Mapper
 {
-    const ENTITY_NAMESPACE = Myframework\Entities\Produto;
+    const ENTITY_NAMESPACE = Application\Site\Models\Produto;
     const ENTITY_TABLENAME = ConnectionConfig::DB_PREFIX . 'produto';
 }
