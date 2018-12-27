@@ -1,4 +1,4 @@
-/nbproject/
-/composer.phar
-/composer.lock
-/vendor/*
+nbproject/
+composer.phar
+composer.lock
+vendor/*
