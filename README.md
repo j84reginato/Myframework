@@ -2,7 +2,7 @@
 
 ## Resumo
 
->Esta aplicação trata-se de um **microframework MVC** simples e leve para uso em projetos da baixa complexidade.
+Esta aplicação trata-se de um **microframework MVC** simples e leve para uso em projetos da baixa complexidade.
 
 ## Pré-requisitos
 
