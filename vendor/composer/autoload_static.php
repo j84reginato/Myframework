@@ -4,35 +4,44 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf7c56fb9121dad829d780f91672e02f8
+class ComposerStaticInitba6ccca45462ff7c31ff0df98a0ac9c3
 {
     public static $prefixLengthsPsr4 = array (
-        'M' => 
+        'j' => 
         array (
-            'Myframework\\' => 12,
+            'j84Reginato\\MyFramework\\' => 24,
         ),
-        'A' => 
+        'S' => 
         array (
-            'Application\\' => 12,
+            'Symfony\\Component\\Finder\\' => 25,
+        ),
+        'G' => 
+        array (
+            'Gregwar\\' => 8,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Myframework\\' => 
+        'j84Reginato\\MyFramework\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/library/myframework',
+            0 => __DIR__ . '/../..' . '/src',
+            1 => __DIR__ . '/../..' . '/test',
         ),
-        'Application\\' => 
+        'Symfony\\Component\\Finder\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/application/modules',
+            0 => __DIR__ . '/..' . '/symfony/finder',
+        ),
+        'Gregwar\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/gregwar/captcha/src/Gregwar',
         ),
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf7c56fb9121dad829d780f91672e02f8::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf7c56fb9121dad829d780f91672e02f8::$prefixDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitba6ccca45462ff7c31ff0df98a0ac9c3::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitba6ccca45462ff7c31ff0df98a0ac9c3::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }

@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Myframework\\' => array($baseDir . '/library/myframework'),
-    'Application\\' => array($baseDir . '/application/modules'),
+    'j84Reginato\\MyFramework\\' => array($baseDir . '/src', $baseDir . '/test'),
+    'Symfony\\Component\\Finder\\' => array($vendorDir . '/symfony/finder'),
+    'Gregwar\\' => array($vendorDir . '/gregwar/captcha/src/Gregwar'),
 );
